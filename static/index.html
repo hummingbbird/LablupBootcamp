@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>실시간 웹챗</title>
+</head>
+<body>
+  <h2>실시간 웹챗</h2>
+  <div id="chat"></div>
+  <input type="text" id="msg" />
+  <button onclick="sendMessage()">보내기</button>
+
+  <script>
+    let nickname = prompt("사용할 닉네임을 입력하세요:");
+    const socket = new WebSocket("ws://localhost:8080/ws");
+
+    socket.onopen = function () {
+      socket.send(JSON.stringify({ type: "join", nickname: nickname }));
+    };
+
+    socket.onmessage = function(event) {
+      const chat = document.getElementById("chat");
+      const div = document.createElement("div");
+      div.innerText = event.data;
+      chat.appendChild(div);
+    };
+
+    function sendMessage() {
+      const input = document.getElementById("msg");
+      socket.send(JSON.stringify({ type: "chat", message: input.value }));
+      input.value = "";
+    }
+
+    window.addEventListener("beforeunload", () => {
+      socket.send(JSON.stringify({ type: "leave" }));
+    });
+  </script>
+</body>
+</html>

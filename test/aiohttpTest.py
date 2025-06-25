@@ -5,11 +5,10 @@ async def fetch(session, url):
     async with session.get(url) as response:
         return await response.text()
 
-async def main():
+async def main(number):
     async with aiohttp.ClientSession() as session:
-        html = await fetch(session, 'http://python.org')
-        # print(html)
+        response = await fetch(session, f"https://jsonplaceholder.typicode.com/posts/{number}")
+        print(response)
 
-# 이벤트 루프 실행
-loop = asyncio.get_event_loop()
-loop.run_until_complete(main())
+if __name__ == '__main__':
+    asyncio.run(main(1))
