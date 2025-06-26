@@ -1,18 +1,20 @@
 import redis.asyncio as redis
 
-redis_client = redis.Redis(
-    host="localhost",  # or 127.0.0.1
+client = redis.Redis(
+    host="localhost",
     port=6379,
     decode_responses=True
 )
 
-async def publish_message(channel, message):
-    await redis_client.publish(channel, message)
+# 메시지 전송
+async def pubMessage(channel, message):
+    await client.publish(channel, message)
 
+# 채널 접속
 async def subscribe_channel(channel):
-    pubsub = redis_client.pubsub()
+    pubsub = client.pubsub()
     await pubsub.subscribe(channel)
-
+    print(f"pubsub.listen(): {pubsub.listen()}")
     async for msg in pubsub.listen():
         if msg["type"] == "message":
             print("Redis 수신:", msg["data"])
