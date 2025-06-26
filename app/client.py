@@ -1,7 +1,19 @@
 import redis.asyncio as redis
+import os
+import logging
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(message)s',
+)
+logger = logging.getLogger('redis-client')
+
+REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
+# REDIS_PORT = int(os.getenv("REDIS_PORT", 6379))
+logger.info(f"redis host, port: {REDIS_HOST}")
 
 client = redis.Redis(
-    host="localhost",
+    host=REDIS_HOST,
     port=6379,
     decode_responses=True
 )

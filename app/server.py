@@ -6,12 +6,13 @@ import logging
 
 
 connected_users = {} # user 리스트
-logging.basicConfig(
-    level=logging.INFO,
-    format='[%(asctime)s] %(levelname)s %(name)s: %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S',
-)
-logger = logging.getLogger('webchat')
+# logging.basicConfig(
+#     level=logging.INFO,
+#     format='%(message)s',
+#     datefmt='%Y-%m-%d %H:%M:%S',
+# )
+
+# logger = logging.getLogger('webchat')
 
 async def websocket_handler(request):
     ws = web.WebSocketResponse() # socket response 받을 ws
@@ -24,7 +25,8 @@ async def websocket_handler(request):
         if msg.type == WSMsgType.TEXT:
             try:
                 data = json.loads(msg.data) # data를 json 형식으로 변환
-                logger.info(f"data: {data}")
+                # data가 잘 보인다는 것은 .. 프론트로부터 잘 받긴 했어
+                # logger.info(f"data: {data}")
                 if data["type"] == "join":
                     nickname = data["nickname"]
                     connected_users[ws] = nickname
@@ -35,7 +37,7 @@ async def websocket_handler(request):
                 elif data["type"] == "leave":
                     await pubMessage("chatroom", f"{connected_users[ws]} 님이 방을 나갔습니다.")
             except Exception as e:
-                logger.info(e)
+                logger.info(f"error: {e}")
 
     return ws
 
