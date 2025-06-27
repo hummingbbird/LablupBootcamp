@@ -32,3 +32,10 @@ export const Tmp = styled.div`
   width: 100%;
   height: 100px;
 `;
+
+// export const ChatItemDiv = styled.div`
+//     display: flex;
+//     justify-content: start;
+//     align-items: start;
+//     font-size: 20px;
+// `;

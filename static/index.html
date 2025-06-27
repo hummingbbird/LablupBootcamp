@@ -5,11 +5,18 @@
     <title>realtime webchat</title>
     <link rel="stylesheet" href="/static/style.css" />
   </head>
+
   <body>
-    <h2>realtime webchat</h2>
-    <div id="chat"></div>
-    <input type="text" id="content" />
-    <button type="submit" id="sendBtn" onclick="sendMessage()">보내기</button>
+    <div id="webchatLayout">
+      <h2>realtime webchat</h2>
+      <div id="chat"></div>
+      <div id="inputDiv">
+        <input type="text" id="content" />
+        <button type="submit" id="sendBtn" onclick="sendMessage()">
+          보내기
+        </button>
+      </div>
+    </div>
 
     <script>
       let nickname = prompt("사용할 닉네임을 입력하세요: ");
@@ -20,7 +27,7 @@
         socket.send(JSON.stringify({ type: "join", nickname: nickname }));
       };
 
-      // 새로운 메시지 수신 시 새로운 div 생성 후 chat div에 추가
+      // 새로운 메시지 수신 시 새로운 span 생성 후 chat div에 추가
       socket.onmessage = function (event) {
         const chat = document.getElementById("chat");
         const span = document.createElement("span");
