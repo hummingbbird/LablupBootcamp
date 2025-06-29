@@ -27,7 +27,7 @@
         socket.send(JSON.stringify({ type: "join", nickname: nickname }));
       };
 
-      // 새로운 메시지 수신 시 새로운 span 생성 후 chat div에 추가
+      // 서버로부터 메시지 수신 시 #chat 영역에 span 추가
       socket.onmessage = function (event) {
         const chat = document.getElementById("chat");
         const span = document.createElement("span");
@@ -35,7 +35,7 @@
         chat.appendChild(span);
       };
 
-      // 전송 클릭 시 실행 함수: 메시지 내용 받아서 JSON 형식으로 변환 후 send
+      // 메시지 전송 함수: json 파싱 후 socket으로 전송
       function sendMessage() {
         const input = document.getElementById("content");
         if (input.value.length !== 0) {
@@ -44,7 +44,7 @@
         }
       }
 
-      // 사용자 unload시(창 끔) socket에 leave했음을 전송
+      // 사용자 unload시(창 끔) 서버에 퇴장 알림 
       window.addEventListener("beforeunload", () => {
         socket.send(JSON.stringify({ type: "leave" }));
       });

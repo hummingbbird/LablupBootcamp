@@ -1,13 +1,13 @@
 version: '3.8'
 
 services:
-  redis:
+  redis: # redis 서버 
     image: redis:latest
     container_name: redis
     ports:
       - '6379:6379'
 
-  web: # 해당 프로젝트 내의 웹 애플리케이션 컨테이너
+  web: # aiohttp 웹 서버
     build: .
     container_name: realtime-webchat
     depends_on: # redis가 먼저 돌아가게 하기 위함
