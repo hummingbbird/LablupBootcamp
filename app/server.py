@@ -7,13 +7,14 @@ from client import pubMessage, subscribe_channel
 import json
 
 
-connected_users = {} # 현재 연결된 클라이언트 리스트
+connected_users = {} # 현재 연결된 클라이언트 딕셔너리
 
 # WebSocket 접속 및 메시지 처리
 async def websocket_handler(request):
+
     # response 응답 객체
     ws = web.WebSocketResponse()
-    await ws.prepare(request)
+    await ws.prepare(request) # http -> ws 연결로 전환
 
     nickname = "알 수 없음"
     connected_users[ws] = nickname
@@ -33,15 +34,18 @@ async def websocket_handler(request):
                     await pubMessage("chatroom", f"{connected_users[ws]}: {data['message']}")
                 elif data["type"] == "leave":
                     await pubMessage("chatroom", f"--- [{connected_users[ws]} 님이 방을 나갔습니다.]---")
-            except Exception as e:
-                print(f"error: {e}")
+            except:
+                pass
 
     return ws
 
+# 새 메시지 받을 때마다 메시지 broadcast
 async def redis_listener():
     async for message in subscribe_channel("chatroom"):
+        # 연결된 users 모두에게
         for ws in list(connected_users.keys()):
             try:
+                # 새 메시지 WebSocket으로 전송
                 await ws.send_str(message)
             except:
                 pass

@@ -8,7 +8,7 @@
 
   <body>
     <div id="webchatLayout">
-      <h2>realtime webchat</h2>
+      <h2 id="title"></h2>
       <div id="chat"></div>
       <div id="inputDiv">
         <input type="text" id="content" />
@@ -20,6 +20,8 @@
 
     <script>
       let nickname = prompt("사용할 닉네임을 입력하세요: ");
+      document.getElementById('title').innerText = `${nickname}님의 채팅`;
+      
       const socket = new WebSocket("ws://localhost:8080/ws");
 
       // 새로운 사용자 접근 시 socket 접근 및 전송 (type: join)

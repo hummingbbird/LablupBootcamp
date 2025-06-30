@@ -6,11 +6,12 @@ import os
 
 
 REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
+REDIS_PORT = int(os.getenv("REDIS_PORT", 6379))
 
 # Redis 비동기 클라이언트
 client = redis.Redis(
     host=REDIS_HOST,
-    port=6379,
+    port=REDIS_PORT,
     decode_responses=True
 )
 
@@ -21,8 +22,7 @@ async def pubMessage(channel, message):
 # 원하는 채널 구독 및 메시지 수신(yield)
 async def subscribe_channel(channel):
     pubsub = client.pubsub()
-    await pubsub.subscribe(channel) # 비동기적으로 subscribe
-    async for msg in pubsub.listen(): # 새 메시지 도착히 yield
+    await pubsub.subscribe(channel) # 비동기적으로 subscribe(메시지 도착까지 기다림)
+    async for msg in pubsub.listen(): # 새 메시지 도착 후 하나씩 yield(메시지 도착 시 실시간 전달)
         if msg["type"] == "message":
-            print("Redis 수신:", msg["data"])
             yield msg["data"]
